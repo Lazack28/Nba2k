@@ -207,53 +207,53 @@
     &copy; 2025 Lazack Organisation. All rights reserved.
   </footer>
 
-  <script>
-    emailjs.init("7aCFyFl6gzpHvbHZz");
+<script>
+  emailjs.init("7aCFyFl6gzpHvbHZz");
 
-    const allPlayers = [
-      "B.I.G", "MXWAKI d10", "Bm Kitwe", "Rzajames",
-      "David Rugger", "Majid Mushi", "Kiduoutfits", "Gilbert"
-    ];
+  const allPlayers = [
+    "B.I.G", "MXWAKI d10", "Bm Kitwe", "Rzajames",
+    "David Rugger", "Majid Mushi", "Kiduoutfits", "Gilbert"
+  ];
 
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function assignGroups() {
+    const shuffled = shuffle([...allPlayers]);
+    return {
+      groupA: shuffled.slice(0, 4),
+      groupB: shuffled.slice(4)
+    };
+  }
+
+  document.getElementById("groupForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const name = document.getElementById("username").value;
+    const email = document.getElementById("email").value;
+    const { groupA, groupB } = assignGroups();
+    const group = groupA.includes(name) ? "Group A" : groupB.includes(name) ? "Group B" : "Unassigned";
+
+    emailjs.send("service_357v5k6", "template_qhzi8rj", {
+      user_name: name,
+      user_email: email,
+      assigned_group: group
+    }).then(
+      () => {
+        document.getElementById("result").innerText = `Success! ${name} is placed in ${group}. Email sent.`;
+        document.getElementById("groupForm").reset(); // This goes here
+      },
+      (error) => {
+        document.getElementById("result").innerText = "Failed to send email. Try again.";
+        console.error(error);
       }
-      return array;
-    }
-
-    function assignGroups() {
-      const shuffled = shuffle([...allPlayers]);
-      return {
-        groupA: shuffled.slice(0, 4),
-        groupB: shuffled.slice(4)
-      };
-    }
-
-    document.getElementById("groupForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const name = document.getElementById("username").value;
-      const email = document.getElementById("email").value;
-      const { groupA, groupB } = assignGroups();
-      const group = groupA.includes(name) ? "Group A" : groupB.includes(name) ? "Group B" : "Unassigned";
-
-      emailjs.send("service_357v5k6", "template_qhzi8rj", {
-        user_name: name,
-        user_email: email,
-        assigned_group: group
-      }).then(
-        () => {
-          document.getElementById("result").innerText = `Success! ${name} is placed in ${group}. Email sent.`;
-        },
-        document.getElementById("groupForm").reset();
-        (error) => {
-          document.getElementById("result").innerText = "Failed to send email. Try again.";
-          console.error(error);
-        }
-      );
-    });
-  </script>
+    );
+  });
+</script>
 
 </body>
 </html>
