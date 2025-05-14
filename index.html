@@ -5,115 +5,203 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NBA2K League Draw</title>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #1f1f2f;
-      --accent: #ff4b2b;
-      --light: #f0f0f0;
-      --bg-card: #2a2a3a;
+      --primary: #0F172A;
+      --accent: #FF6B3D;
+      --accent-hover: #FF521F;
+      --light: #F8FAFC;
+      --bg-card: #1E293B;
+      --success: #34D399;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Poppins', sans-serif;
       background: var(--primary);
       color: var(--light);
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      padding: 20px;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
     }
 
     h1 {
-      margin-bottom: 10px;
-      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 2.25rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #FF6B3D, #FFA43D);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    form {
+    .card {
       background: var(--bg-card);
-      padding: 30px 20px;
-      border-radius: 16px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.4);
-      max-width: 350px;
-      width: 100%;
-      transition: 0.3s ease;
+      padding: 2rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
     }
 
     label {
-      font-size: 1rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #94A3B8;
     }
 
-    select, input[type=email], button {
+    select, input[type="email"] {
       width: 100%;
-      margin: 10px 0;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
+      padding: 0.875rem;
+      border: 2px solid #334155;
+      border-radius: 0.75rem;
+      background: #1E293B;
+      color: var(--light);
       font-size: 1rem;
-      outline: none;
+      transition: all 0.3s ease;
     }
 
-    select, input[type=email] {
-      background: #fff;
-      color: #000;
+    select:focus, input[type="email"]:focus {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 107, 61, 0.2);
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394A3B8'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1.5em;
     }
 
     button {
-      background: var(--accent);
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 0.75rem;
+      background: linear-gradient(45deg, var(--accent), var(--accent-hover));
       color: white;
-      font-weight: bold;
+      font-weight: 600;
+      font-size: 1rem;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     button:hover {
-      background: #e03f1f;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 107, 61, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
     }
 
     #result {
-      margin-top: 20px;
-      font-size: 1rem;
-      color: #0f0;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      background: rgba(52, 211, 153, 0.1);
+      border: 2px solid var(--success);
+      color: var(--success);
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    #result::before {
+      content: '✓';
+      font-size: 1.25rem;
     }
 
     footer {
+      text-align: center;
       margin-top: auto;
-      padding: 20px 0;
-      font-size: 0.9rem;
-      color: #aaa;
+      padding: 2rem 0 1rem;
+      color: #64748B;
+      font-size: 0.875rem;
     }
 
-    @media (max-width: 400px) {
-      form {
-        padding: 20px 10px;
+    .loader {
+      display: none;
+      width: 24px;
+      height: 24px;
+      border: 3px solid #fff;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 1.5rem;
+      }
+      
+      h1 {
+        font-size: 1.75rem;
       }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>NBA2K League Group Draw</h1>
 
-  <h1>NBA2K League Group Draw</h1>
+    <div class="card">
+      <form id="groupForm">
+        <div class="form-group">
+          <label for="username">Select Your Player</label>
+          <select id="username" required>
+            <option value="">Choose your name...</option>
+            <option value="B.I.G">B.I.G</option>
+            <option value="MXWAKI d10">MXWAKI d10</option>
+            <option value="Bm Kitwe">Bm Kitwe</option>
+            <option value="Rzajames">Rzajames</option>
+            <option value="David Rugger">David Rugger</option>
+            <option value="Majid Mushi">Majid Mushi</option>
+            <option value="Kiduoutfits">Kiduoutfits</option>
+            <option value="Gilbert">Gilbert</option>
+          </select>
+        </div>
 
-  <form id="groupForm">
-    <label for="username">Choose your name:</label>
-    <select id="username" required>
-      <option value="">-- Select Your Name --</option>
-      <option value="B.I.G">B.I.G</option>
-      <option value="MXWAKI d10">MXWAKI d10</option>
-      <option value="Bm Kitwe">Bm Kitwe</option>
-      <option value="Rzajames">Rzajames</option>
-      <option value="David Rugger">David Rugger</option>
-      <option value="Majid Mushi">Majid Mushi</option>
-      <option value="Kiduoutfits">Kiduoutfits</option>
-      <option value="Gilbert">Gilbert</option>
-    </select>
+        <div class="form-group">
+          <label for="email">Contact Email</label>
+          <input type="email" id="email" placeholder="your@email.com" required />
+        </div>
 
-    <input type="email" id="email" placeholder="Enter your email" required />
-    <button type="submit">Join Group</button>
-  </form>
+        <button type="submit">
+          <span class="button-text">Join Tournament</span>
+          <div class="loader"></div>
+        </button>
+      </form>
+    </div>
 
-  <p id="result"></p>
+    <div id="result"></div>
+  </div>
 
   <footer>
     &copy; 2025 Lazack Organisation. All rights reserved.
