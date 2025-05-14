@@ -246,6 +246,7 @@
         () => {
           document.getElementById("result").innerText = `Success! ${name} is placed in ${group}. Email sent.`;
         },
+        document.getElementById("groupForm").reset();
         (error) => {
           document.getElementById("result").innerText = "Failed to send email. Try again.";
           console.error(error);
