@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NBA2K League Group Draw</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
+    })();
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #0e0e0e;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      background: #1f1f1f;
+      font-size: 1.8em;
+      font-weight: bold;
+      color: #00bcd4;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    select, input, button {
+      padding: 12px;
+      margin: 10px;
+      width: 90%;
+      max-width: 320px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+
+    select, input {
+      background-color: #1c1c1c;
+      color: white;
+      border: 1px solid #333;
+    }
+
+    button {
+      background-color: #00bcd4;
+      color: black;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0097a7;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    footer {
+      background: #1f1f1f;
+      padding: 15px;
+      text-align: center;
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <header>NBA2K League Group Draw</header>
+
+  <main>
+    <select id="player">
+      <option value="">-- Select Your Name --</option>
+      <option value="B.I.G">B.I.G</option>
+      <option value="MXWAKI d10">MXWAKI d10</option>
+      <option value="Bm Kitwe">Bm Kitwe</option>
+      <option value="Rzajames">Rzajames</option>
+      <option value="David Rugger">David Rugger</option>
+      <option value="Majid Mushi">Majid Mushi</option>
+      <option value="Kiduoutfits">Kiduoutfits</option>
+      <option value="Gilbert">Gilbert</option>
+    </select>
+
+    <input type="email" id="email" placeholder="Enter your email">
+
+    <button onclick="assignGroup()">Draw My Group</button>
+
+    <p id="result"></p>
+  </main>
+
+  <footer>
+    © 2025 Lazack Organisation. All rights reserved.
+  </footer>
+
+  <script>
+    const groupA = [];
+    const groupB = [];
+    const assignedPlayers = new Set();
+    const totalPerGroup = 4;
+
+    function assignGroup() {
+      const name = document.getElementById("player").value;
+      const email = document.getElementById("email").value.trim();
+
+      if (!name || !email) {
+        alert("Please select your name and enter your email.");
+        return;
+      }
+
+      if (assignedPlayers.has(name)) {
+        alert("This player has already been assigned.");
+        return;
+      }
+
+      let group = "";
+      if (groupA.length < totalPerGroup && groupB.length < totalPerGroup) {
+        group = Math.random() < 0.5 ? "Group A" : "Group B";
+      } else if (groupA.length < totalPerGroup) {
+        group = "Group A";
+      } else if (groupB.length < totalPerGroup) {
+        group = "Group B";
+      } else {
+        document.getElementById("result").textContent = "All groups are full.";
+        return;
+      }
+
+      if (group === "Group A") groupA.push(name);
+      else groupB.push(name);
+
+      assignedPlayers.add(name);
+
+      document.getElementById("result").textContent = `${name}, you have been assigned to ${group}!`;
+
+      // Send email using EmailJS
+      emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+        user_name: name,
+        user_email: email,
+        assigned_group: group
+      }).then(() => {
+        console.log("Email sent successfully.");
+      }).catch((error) => {
+        console.error("Failed to send email:", error);
+      });
+    }
+  </script>
+</body>
+  </html>
